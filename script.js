@@ -172,40 +172,62 @@ document.addEventListener('DOMContentLoaded', () => {
             let positionY = 0;
             let returnTimeout;
             
-            link.addEventListener('mousemove', (e) => {
-                // Clear timeout if mouse comes back
+            // Function to handle movement (works for both mouse and touch)
+            const handleMove = (clientX, clientY) => {
                 clearTimeout(returnTimeout);
                 
                 const buttonRect = link.getBoundingClientRect();
                 const buttonCenterX = buttonRect.left + buttonRect.width / 2;
                 const buttonCenterY = buttonRect.top + buttonRect.height / 2;
                 
-                const deltaX = e.clientX - buttonCenterX;
-                const deltaY = e.clientY - buttonCenterY;
+                const deltaX = clientX - buttonCenterX;
+                const deltaY = clientY - buttonCenterY;
                 const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
                 
-                const maxDistance = 200;
+                // Adjust max distance for mobile screens
+                const isMobile = window.innerWidth <= 480;
+                const maxDistance = isMobile ? 150 : 200;
+                const maxMove = isMobile ? 150 : 250;
+                const multiplier = isMobile ? 1.2 : 1.5;
+                const randomRange = isMobile ? 50 : 100;
                 
                 if (distance < maxDistance) {
-                    // Escape with more extreme movement
-                    const multiplier = 1.5;
-                    const randomX = (Math.random() - 0.5) * 100;
-                    const randomY = (Math.random() - 0.5) * 100;
+                    const randomX = (Math.random() - 0.5) * randomRange;
+                    const randomY = (Math.random() - 0.5) * randomRange;
                     
                     positionX += (-deltaX * multiplier) + randomX;
                     positionY += (-deltaY * multiplier) + randomY;
                     
-                    // Limit movement range
-                    const maxMove = 250;
                     positionX = Math.max(-maxMove, Math.min(maxMove, positionX));
                     positionY = Math.max(-maxMove, Math.min(maxMove, positionY));
                     
-                    link.style.transform = `translate(${positionX}px, ${positionY}px) rotate(${(Math.random() - 0.5) * 10}deg)`;
+                    link.style.transform = `translate(${positionX}px, ${positionY}px) rotate(${(Math.random() - 0.5) * (isMobile ? 5 : 10)}deg)`;
                 }
+            };
+            
+            // Mouse events
+            link.addEventListener('mousemove', (e) => {
+                handleMove(e.clientX, e.clientY);
             });
             
             link.addEventListener('mouseleave', () => {
-                // Wait 3 seconds before returning to original position
+                returnTimeout = setTimeout(() => {
+                    positionX = 0;
+                    positionY = 0;
+                    link.style.transform = 'translate(0, 0) rotate(0deg)';
+                }, 3000);
+            });
+            
+            // Touch events for mobile
+            link.addEventListener('touchmove', (e) => {
+                e.preventDefault(); // Prevent scrolling while touching
+                if (e.touches.length > 0) {
+                    const touch = e.touches[0];
+                    handleMove(touch.clientX, touch.clientY);
+                }
+            });
+            
+            link.addEventListener('touchend', () => {
                 returnTimeout = setTimeout(() => {
                     positionX = 0;
                     positionY = 0;
