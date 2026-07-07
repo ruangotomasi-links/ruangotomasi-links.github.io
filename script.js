@@ -165,5 +165,59 @@ document.addEventListener('DOMContentLoaded', () => {
         // Add hover and click sound
         link.addEventListener('mouseenter', playHoverSound);
         link.addEventListener('click', playClickSound);
+        
+        // Add CRAZY escape effect for coming soon buttons
+        if (link.classList.contains('coming-soon')) {
+            let positionX = 0;
+            let positionY = 0;
+            let returnTimeout;
+            
+            link.addEventListener('mousemove', (e) => {
+                // Clear timeout if mouse comes back
+                clearTimeout(returnTimeout);
+                
+                const buttonRect = link.getBoundingClientRect();
+                const buttonCenterX = buttonRect.left + buttonRect.width / 2;
+                const buttonCenterY = buttonRect.top + buttonRect.height / 2;
+                
+                const deltaX = e.clientX - buttonCenterX;
+                const deltaY = e.clientY - buttonCenterY;
+                const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+                
+                const maxDistance = 200;
+                
+                if (distance < maxDistance) {
+                    // Escape with more extreme movement
+                    const multiplier = 1.5;
+                    const randomX = (Math.random() - 0.5) * 100;
+                    const randomY = (Math.random() - 0.5) * 100;
+                    
+                    positionX += (-deltaX * multiplier) + randomX;
+                    positionY += (-deltaY * multiplier) + randomY;
+                    
+                    // Limit movement range
+                    const maxMove = 250;
+                    positionX = Math.max(-maxMove, Math.min(maxMove, positionX));
+                    positionY = Math.max(-maxMove, Math.min(maxMove, positionY));
+                    
+                    link.style.transform = `translate(${positionX}px, ${positionY}px) rotate(${(Math.random() - 0.5) * 10}deg)`;
+                }
+            });
+            
+            link.addEventListener('mouseleave', () => {
+                // Wait 3 seconds before returning to original position
+                returnTimeout = setTimeout(() => {
+                    positionX = 0;
+                    positionY = 0;
+                    link.style.transform = 'translate(0, 0) rotate(0deg)';
+                }, 3000);
+            });
+            
+            // Prevent click
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                playClickSound();
+            });
+        }
     });
 });
