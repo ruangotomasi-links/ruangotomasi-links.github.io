@@ -1,0 +1,207 @@
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    position: relative;
+    overflow: hidden;
+}
+
+.particles {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 0;
+}
+
+.particle {
+    position: absolute;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    animation: float linear infinite;
+}
+
+@keyframes float {
+    0% {
+        transform: translateY(100vh) rotate(0deg);
+        opacity: 0;
+    }
+    10% {
+        opacity: 1;
+    }
+    90% {
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(-100px) rotate(360deg);
+        opacity: 0;
+    }
+}
+
+.container {
+    width: 100%;
+    max-width: 450px;
+    position: relative;
+    z-index: 1;
+}
+
+.hero {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.profile-img {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid white;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    margin-bottom: 20px;
+}
+
+.name {
+    color: white;
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.tagline {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 16px;
+    font-weight: 400;
+}
+
+.links {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.link {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background: white;
+    padding: 20px 24px;
+    border-radius: 16px;
+    text-decoration: none;
+    color: #333;
+    font-weight: 600;
+    font-size: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.link:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+}
+
+.link i {
+    font-size: 24px;
+}
+
+.link.wa {
+    background: #25D366;
+    color: white;
+}
+
+.link.wa i {
+    color: white;
+}
+
+.link.instagram {
+    background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+    color: white;
+}
+
+.link.instagram i {
+    color: white;
+}
+
+.link.tiktok {
+    background: #000;
+    color: white;
+}
+
+.link.tiktok i {
+    color: white;
+}
+
+.link.youtube {
+    background: #FF0000;
+    color: white;
+}
+
+.link.youtube i {
+    color: white;
+}
+
+.link.facebook {
+    background: #1877F2;
+    color: white;
+}
+
+.link.facebook i {
+    color: white;
+}
+
+.link.twitter {
+    background: #000;
+    color: white;
+}
+
+.link.twitter i {
+    color: white;
+}
+
+.link.coming-soon {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.link.coming-soon:hover {
+    transform: none;
+}
+
+.coming-soon-badge {
+    background: rgba(255,255,255,0.3);
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 400;
+    margin-left: 8px;
+}
+
+.footer {
+    text-align: center;
+    margin-top: 40px;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 14px;
+}
+
+@media (max-width: 480px) {
+    .name {
+        font-size: 24px;
+    }
+    .link {
+        padding: 16px 20px;
+    }
+}
+
