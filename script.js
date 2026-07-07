@@ -1,4 +1,57 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // Audio setup
+    let audioContext;
+    let soundEnabled = true;
+    
+    function initAudio() {
+        if (!audioContext) {
+            audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        }
+    }
+    
+    // Play hover sound (soft pop)
+    function playHoverSound() {
+        if (!soundEnabled) return;
+        initAudio();
+        
+        const oscillator = audioContext.createOscillator();
+        const gainNode = audioContext.createGain();
+        
+        oscillator.connect(gainNode);
+        gainNode.connect(audioContext.destination);
+        
+        oscillator.frequency.setValueAtTime(600, audioContext.currentTime);
+        oscillator.frequency.exponentialRampToValueAtTime(800, audioContext.currentTime + 0.08);
+        
+        gainNode.gain.setValueAtTime(0.15, audioContext.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
+        
+        oscillator.start(audioContext.currentTime);
+        oscillator.stop(audioContext.currentTime + 0.1);
+    }
+    
+    // Play click sound (satisfying tap)
+    function playClickSound() {
+        if (!soundEnabled) return;
+        initAudio();
+        
+        const oscillator = audioContext.createOscillator();
+        const gainNode = audioContext.createGain();
+        
+        oscillator.connect(gainNode);
+        gainNode.connect(audioContext.destination);
+        
+        oscillator.type = 'sine';
+        oscillator.frequency.setValueAtTime(450, audioContext.currentTime);
+        oscillator.frequency.exponentialRampToValueAtTime(200, audioContext.currentTime + 0.12);
+        
+        gainNode.gain.setValueAtTime(0.25, audioContext.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.15);
+        
+        oscillator.start(audioContext.currentTime);
+        oscillator.stop(audioContext.currentTime + 0.15);
+    }
+    
     // Create particles
     const particlesContainer = document.getElementById('particles');
     const particleCount = 30;
@@ -21,7 +74,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const particle = document.createElement('div');
         particle.classList.add('particle');
         
-        // Random properties
         const size = Math.random() * 80 + 15;
         const left = Math.random() * 100;
         const duration = Math.random() * 20 + 12;
@@ -42,7 +94,6 @@ document.addEventListener('DOMContentLoaded', () => {
         char.classList.add('floating-char');
         char.textContent = chars[index % chars.length];
         
-        // Random properties
         const left = Math.random() * 85 + 5;
         const duration = Math.random() * 30 + 20;
         const delay = Math.random() * 15;
@@ -54,11 +105,8 @@ document.addEventListener('DOMContentLoaded', () => {
         char.style.animationDelay = `${delay}s`;
         char.style.fontSize = `${fontSize}rem`;
         
-        // Custom animation for each character
-        char.style.animationName = 'none';
         char.style.animation = `floatCharCustom-${index} ${duration}s linear infinite`;
         
-        // Add dynamic keyframe
         const style = document.createElement('style');
         style.textContent = `
             @keyframes floatCharCustom-${index} {
@@ -83,6 +131,14 @@ document.addEventListener('DOMContentLoaded', () => {
         container.appendChild(char);
     }
     
+    // Sound toggle
+    const soundToggle = document.getElementById('soundToggle');
+    soundToggle.addEventListener('click', () => {
+        soundEnabled = !soundEnabled;
+        soundToggle.classList.toggle('muted', !soundEnabled);
+        playClickSound();
+    });
+    
     // Hero and links animation
     const hero = document.querySelector('.hero');
     const links = document.querySelectorAll('.link');
@@ -105,5 +161,9 @@ document.addEventListener('DOMContentLoaded', () => {
             link.style.opacity = '1';
             link.style.transform = 'translateY(0)';
         }, 350 + (index * 120));
+        
+        // Add hover and click sound
+        link.addEventListener('mouseenter', playHoverSound);
+        link.addEventListener('click', playClickSound);
     });
 });
