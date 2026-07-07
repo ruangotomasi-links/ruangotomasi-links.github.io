@@ -220,12 +220,19 @@ document.addEventListener('DOMContentLoaded', () => {
             
             // Touch events for mobile
             link.addEventListener('touchmove', (e) => {
-                e.preventDefault(); // Prevent scrolling while touching
-                if (e.touches.length > 0) {
-                    const touch = e.touches[0];
+                // Only prevent default if touch is close to button (to allow scrolling)
+                const touch = e.touches[0];
+                const buttonRect = link.getBoundingClientRect();
+                const distance = Math.sqrt(
+                    Math.pow(touch.clientX - (buttonRect.left + buttonRect.width/2), 2) +
+                    Math.pow(touch.clientY - (buttonRect.top + buttonRect.height/2), 2)
+                );
+                
+                if (distance < 200) {
+                    e.preventDefault();
                     handleMove(touch.clientX, touch.clientY);
                 }
-            });
+            }, { passive: false });
             
             link.addEventListener('touchend', () => {
                 returnTimeout = setTimeout(() => {
