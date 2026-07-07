@@ -297,10 +297,15 @@ body {
 .link.coming-soon {
     opacity: 0.7;
     cursor: not-allowed;
+    position: relative;
+    transition: transform 0.12s ease-out;
+    z-index: 2;
+    touch-action: manipulation; /* Allow scroll but optimize touch */
+    -webkit-tap-highlight-color: transparent;
+    will-change: transform; /* Optimize animation performance */
 }
 
 .link.coming-soon:hover {
-    transform: none;
     box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
 }
 
